@@ -5,7 +5,7 @@ from utils.initialization import variables_intialization
 
 st.set_page_config(layout='wide')
 
-
+print('test')
 variables_intialization()
 
 

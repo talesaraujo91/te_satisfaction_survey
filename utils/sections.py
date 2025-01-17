@@ -11,7 +11,6 @@ css_styles = """
             }
             """
 
-
 # Function to create star rating questions and comments
 def create_section(title, questions):
     with stylable_container(
