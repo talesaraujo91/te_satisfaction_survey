@@ -1,34 +1,13 @@
 import streamlit as st
 from streamlit_option_menu import option_menu
-from streamlit_star_rating import st_star_rating
-from streamlit_extras.stylable_container import stylable_container
+from utils.sections import create_section
+from utils.initialization import variables_intialization
 
 st.set_page_config(layout='wide')
 
-css_styles = """
-            {
-                border: 1px solid rgba(49, 51, 63, 0.2);
-                border-radius: 0.5rem;
-                background: rgba(255,255,255,0.8);
-                padding: calc(1em - 1px)
-            }
-            """
 
-# Initialize session state to keep track of completion status and user inputs
-if 'completion_status' not in st.session_state:
-    st.session_state.completion_status = {
-        "Capacitação": False,
-        "QSHE": False,
-        "Equipamentos e Ferramentas": False,
-        "Pessoas": False,
-        "Colaboração": False
-    }
+variables_intialization
 
-if 'ratings' not in st.session_state:
-    st.session_state.ratings = {}
-
-if 'comments' not in st.session_state:
-    st.session_state.comments = {}
 
 # Define the options for the menu
 options = ["Capacitação", "QSHE", "Equipamentos e Ferramentas", "Pessoas", "Colaboração"]
@@ -41,7 +20,7 @@ def get_icons():
     return icons
 
 selected = option_menu(
-    menu_title=None,  # required
+    menu_title="Pesquisa de Satisfação TermoEletro",  # required
     options=options,  # required
     icons=get_icons(),  # optional, dynamically set icons
     menu_icon="menu",  # optional
@@ -50,45 +29,6 @@ selected = option_menu(
     key="main_menu"
 )
 
-# Function to create star rating questions and comments
-def create_section(title, questions):
-    with stylable_container(
-        key="container_with_border",
-        css_styles=css_styles,
-    ):
-        with st.container():
-            st.warning(title)
-
-            all_answered = True
-
-            for question in questions:
-                key = f"{title}_{question}"
-                
-                # Initialize session state for each question's rating
-                if key not in st.session_state.ratings:
-                    st.session_state.ratings[key] = None
-
-                # Get the rating value from session state
-                rating = st_star_rating(question, maxValue=5, defaultValue=st.session_state.ratings[key], emoticons=True, key=f"rating_{key}")
-
-                # Update session state with the current rating
-                st.session_state.ratings[key] = rating
-
-                if rating is None:
-                    all_answered = False
-
-            # Initialize session state for comments
-            if title not in st.session_state.comments:
-                st.session_state.comments[title] = ""
-
-            # Get the comments value from session state
-            comments = st.text_area(f"Comentários sobre {title}", value=st.session_state.comments[title], key=f"comments_{title}")
-
-            # Update session state with the current comments
-            st.session_state.comments[title] = comments
-
-            # Update completion status
-            st.session_state.completion_status[title] = all_answered
 
 # Define the content for each section
 if selected == "Capacitação":
